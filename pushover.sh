@@ -3,8 +3,10 @@
 VERSION="0.1"
 PROGNAME=`basename $0`
 
-PUSHOVER_TOKEN=""
+CONFIG="$HOME/.pushover"
+
 PUSHOVER_USER=""
+PUSHOVER_TOKEN=""
 PUSHOVER_MESSAGE=""
 PUSHOVER_DEVICE=""
 PUSHOVER_TITLE=""
@@ -13,6 +15,11 @@ PUSHOVER_URL_TITLE=""
 PUSHOVER_PRIORITY=""
 PUSHOVER_TIMESTAMP=""
 PUSHOVER_SOUND=""
+
+if [ -f "$CONFIG" ]
+then
+    . $CONFIG
+fi
 
 print_usage () {
     cat <<EOT
@@ -119,7 +126,7 @@ then
 fi
 
 RETVAL=`push_message`
-if [ "$RETVAL" = *errors* ]
+if (echo "$RETVAL" | grep "error" > /dev/null)
 then
     ERROR=`echo $RETVAL | sed 's/.*errors\":\[\(".*"\)\].*/\1/'`
     echo "error: $ERROR" >&2
