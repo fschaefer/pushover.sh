@@ -5,16 +5,16 @@ PROGNAME=`basename $0`
 
 CONFIG="$HOME/.pushover"
 
-PUSHOVER_USER=""
-PUSHOVER_TOKEN=""
-PUSHOVER_MESSAGE=""
-PUSHOVER_DEVICE=""
-PUSHOVER_TITLE=""
-PUSHOVER_URL=""
-PUSHOVER_URL_TITLE=""
-PUSHOVER_PRIORITY=""
-PUSHOVER_TIMESTAMP=""
-PUSHOVER_SOUND=""
+PUSHOVER_USER_TOKEN=""
+PUSHOVER_API_TOKEN=""
+PUSHOVER_MESSAGE_TEXT=""
+PUSHOVER_TARGET_DEVICE=""
+PUSHOVER_MESSAGE_TITLE=""
+PUSHOVER_MESSAGE_URL=""
+PUSHOVER_MESSAGE_URL_TITLE=""
+PUSHOVER_MESSAGE_PRIORITY=""
+PUSHOVER_MESSAGE_TIMESTAMP=""
+PUSHOVER_NOTIFICATION_SOUND=""
 
 if [ -f "$CONFIG" ]
 then
@@ -49,16 +49,16 @@ print_version () {
 
 push_message () {
     curl -s \
-        -F "token=$PUSHOVER_TOKEN" \
-        -F "user=$PUSHOVER_USER" \
-        -F "message=$PUSHOVER_MESSAGE" \
-        -F "device=$PUSHOVER_DEVICE" \
-        -F "title=$PUSHOVER_TITLE" \
-        -F "url=$PUSHOVER_URL" \
-        -F "url_title=$PUSHOVER_URL_TITLE" \
-        -F "priority=$PUSHOVER_PRIORITY" \
-        -F "timestamp=$PUSHOVER_TIMESTAMP" \
-        -F "sound=$PUSHOVER_SOUND" \
+        -F "token=$PUSHOVER_API_TOKEN" \
+        -F "user=$PUSHOVER_USER_TOKEN" \
+        -F "message=$PUSHOVER_MESSAGE_TEXT" \
+        -F "device=$PUSHOVER_TARGET_DEVICE" \
+        -F "title=$PUSHOVER_MESSAGE_TITLE" \
+        -F "url=$PUSHOVER_MESSAGE_URL" \
+        -F "url_title=$PUSHOVER_MESSAGE_URL_TITLE" \
+        -F "priority=$PUSHOVER_MESSAGE_PRIORITY" \
+        -F "timestamp=$PUSHOVER_MESSAGE_TIMESTAMP" \
+        -F "sound=$PUSHOVER_NOTIFICATION_SOUND" \
         https://api.pushover.net/1/messages.json
 }
 
@@ -74,34 +74,34 @@ while getopts hvu:a:m:d:q:w:e:p:t:s: OPT; do
             exit 0
             ;;
         u)
-            PUSHOVER_USER=$OPTARG
+            PUSHOVER_USER_TOKEN=$OPTARG
             ;;
         a)
-            PUSHOVER_TOKEN=$OPTARG
+            PUSHOVER_API_TOKEN=$OPTARG
             ;;
         m)
-            PUSHOVER_MESSAGE=$OPTARG
+            PUSHOVER_MESSAGE_TEXT=$OPTARG
             ;;
         d)
-            PUSHOVER_DEVICE=$OPTARG
+            PUSHOVER_TARGET_DEVICE=$OPTARG
             ;;
         q)
-            PUSHOVER_TITLE=$OPTARG
+            PUSHOVER_MESSAGE_TITLE=$OPTARG
             ;;
         w)
-            PUSHOVER_URL=$OPTARG
+            PUSHOVER_MESSAGE_URL=$OPTARG
             ;;
         e)
-            PUSHOVER_URL_TITLE=$OPTARG
+            PUSHOVER_MESSAGE_URL_TITLE=$OPTARG
             ;;
         p)
-            PUSHOVER_PRIORITY=$OPTARG
+            PUSHOVER_MESSAGE_PRIORITY=$OPTARG
             ;;
         t)
-            PUSHOVER_TIMESTAMP=$OPTARG
+            PUSHOVER_MESSAGE_TIMESTAMP=$OPTARG
             ;;
         s)
-            PUSHOVER_sound=$OPTARG
+            PUSHOVER_NOTIFICATION_SOUND=$OPTARG
             ;;
         \?)
             # getopts issues an error message
@@ -113,12 +113,12 @@ done
 
 shift `expr $OPTIND - 1`
 
-if [ "$PUSHOVER_MESSAGE" = "" ]
+if [ "$PUSHOVER_MESSAGE_TEXT" = "" ]
 then
-    PUSHOVER_MESSAGE="$*"
+    PUSHOVER_MESSAGE_TEXT="$*"
 fi
 
-if [ "$PUSHOVER_USER" = "" ] || [ "$PUSHOVER_TOKEN" = "" ] || [ "$PUSHOVER_MESSAGE" = "" ]
+if [ "$PUSHOVER_USER_TOKEN" = "" ] || [ "$PUSHOVER_API_TOKEN" = "" ] || [ "$PUSHOVER_MESSAGE_TEXT" = "" ]
 then
     print_version >&2
     print_usage >&2
