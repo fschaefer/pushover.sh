@@ -1,7 +1,7 @@
 #!/bin/sh
 
 VERSION="0.1"
-PROGNAME=`basename $0`
+PROGNAME="$(basename $0)"
 
 CONFIG="$HOME/.pushover"
 
@@ -18,7 +18,7 @@ PUSHOVER_NOTIFICATION_SOUND=""
 
 if [ -f "$CONFIG" ]
 then
-    . $CONFIG
+    . "$CONFIG"
 fi
 
 print_usage () {
@@ -111,7 +111,7 @@ while getopts hvu:a:m:d:q:w:e:p:t:s: OPT; do
     esac
 done
 
-shift `expr $OPTIND - 1`
+shift "$(expr $OPTIND - 1)"
 
 if [ "$PUSHOVER_MESSAGE_TEXT" = "" ]
 then
@@ -125,10 +125,10 @@ then
     exit 1
 fi
 
-RETVAL=`push_message`
+RETVAL="$(push_message)"
 if (echo "$RETVAL" | grep "error" > /dev/null)
 then
-    ERROR=`echo $RETVAL | sed 's/.*errors\":\[\(".*"\)\].*/\1/'`
+    ERROR="$(echo $RETVAL | sed 's/.*errors\":\[\(".*"\)\].*/\1/')"
     echo "error: $ERROR" >&2
     exit 1
 fi
