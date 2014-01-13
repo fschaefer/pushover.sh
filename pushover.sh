@@ -74,34 +74,34 @@ while getopts hvu:a:m:d:q:w:e:p:t:s: OPT; do
             exit 0
             ;;
         u)
-            PUSHOVER_USER_TOKEN=$OPTARG
+            PUSHOVER_USER_TOKEN="$OPTARG"
             ;;
         a)
-            PUSHOVER_API_TOKEN=$OPTARG
+            PUSHOVER_API_TOKEN="$OPTARG"
             ;;
         m)
-            PUSHOVER_MESSAGE_TEXT=$OPTARG
+            PUSHOVER_MESSAGE_TEXT="$OPTARG"
             ;;
         d)
-            PUSHOVER_TARGET_DEVICE=$OPTARG
+            PUSHOVER_TARGET_DEVICE="$OPTARG"
             ;;
         q)
-            PUSHOVER_MESSAGE_TITLE=$OPTARG
+            PUSHOVER_MESSAGE_TITLE="$OPTARG"
             ;;
         w)
-            PUSHOVER_MESSAGE_URL=$OPTARG
+            PUSHOVER_MESSAGE_URL="$OPTARG"
             ;;
         e)
-            PUSHOVER_MESSAGE_URL_TITLE=$OPTARG
+            PUSHOVER_MESSAGE_URL_TITLE="$OPTARG"
             ;;
         p)
-            PUSHOVER_MESSAGE_PRIORITY=$OPTARG
+            PUSHOVER_MESSAGE_PRIORITY="$OPTARG"
             ;;
         t)
-            PUSHOVER_MESSAGE_TIMESTAMP=$OPTARG
+            PUSHOVER_MESSAGE_TIMESTAMP="$OPTARG"
             ;;
         s)
-            PUSHOVER_NOTIFICATION_SOUND=$OPTARG
+            PUSHOVER_NOTIFICATION_SOUND="$OPTARG"
             ;;
         \?)
             # getopts issues an error message
