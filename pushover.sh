@@ -48,7 +48,7 @@ print_version () {
 }
 
 push_message () {
-    curl -s \
+    curl -ks \
         -F "token=$PUSHOVER_API_TOKEN" \
         -F "user=$PUSHOVER_USER_TOKEN" \
         -F "message=$PUSHOVER_MESSAGE_TEXT" \
