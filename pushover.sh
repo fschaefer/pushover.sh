@@ -107,6 +107,7 @@ while getopts hvu:a:m:d:q:w:e:p:t:s: OPT; do
             # getopts issues an error message
             print_version >&2
             print_usage >&2
+            exit 1
             ;;
     esac
 done
