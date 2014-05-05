@@ -7,7 +7,7 @@ Shell script to push messages to Android and iOS devices via Pushover
 
 Usage:
 ```
-pushover.sh 0.1
+pushover.sh 1.0
 Usage:	pushover.sh -u <user key> -a <api key> [<options>] message
 
 Supported options:

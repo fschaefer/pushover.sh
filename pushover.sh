@@ -1,9 +1,16 @@
 #!/bin/sh
+#
+# pushover.sh: Shell script to push messages to mobile devices via Pushover (https://pushover.net/)
+#
+# Florian Schäfer <florian.schaefer@gmail.com>, 2013-02-04
+#
+# Requires curl(1), grep(1) and sed(1).
+#
 
-VERSION="0.1"
+VERSION="1.0"
 PROGNAME="$(basename $0)"
 
-CONFIG="$HOME/.pushover"
+CONFIG="${HOME}/.pushover"
 
 PUSHOVER_USER_TOKEN=""
 PUSHOVER_API_TOKEN=""
@@ -16,14 +23,14 @@ PUSHOVER_MESSAGE_PRIORITY=""
 PUSHOVER_MESSAGE_TIMESTAMP=""
 PUSHOVER_NOTIFICATION_SOUND=""
 
-if [ -f "$CONFIG" ]
+if [ -f "${CONFIG}" ]
 then
-    . "$CONFIG"
+    . "${CONFIG}"
 fi
 
 print_usage () {
     cat <<EOT
-Usage:	$PROGNAME -u <user key> -a <api key> [<options>] message
+Usage:  ${PROGNAME} -u <user key> -a <api key> [<options>] message
 
 Supported options:
     -h              print this help message
@@ -44,27 +51,27 @@ EOT
 }
 
 print_version () {
-    echo "$PROGNAME $VERSION"
+    echo "${PROGNAME} ${VERSION}"
 }
 
 push_message () {
     curl -ks \
-        -F "token=$PUSHOVER_API_TOKEN" \
-        -F "user=$PUSHOVER_USER_TOKEN" \
-        -F "message=$PUSHOVER_MESSAGE_TEXT" \
-        -F "device=$PUSHOVER_TARGET_DEVICE" \
-        -F "title=$PUSHOVER_MESSAGE_TITLE" \
-        -F "url=$PUSHOVER_MESSAGE_URL" \
-        -F "url_title=$PUSHOVER_MESSAGE_URL_TITLE" \
-        -F "priority=$PUSHOVER_MESSAGE_PRIORITY" \
-        -F "timestamp=$PUSHOVER_MESSAGE_TIMESTAMP" \
-        -F "sound=$PUSHOVER_NOTIFICATION_SOUND" \
+        -F "token=${PUSHOVER_API_TOKEN}" \
+        -F "user=${PUSHOVER_USER_TOKEN}" \
+        -F "message=${PUSHOVER_MESSAGE_TEXT}" \
+        -F "device=${PUSHOVER_TARGET_DEVICE}" \
+        -F "title=${PUSHOVER_MESSAGE_TITLE}" \
+        -F "url=${PUSHOVER_MESSAGE_URL}" \
+        -F "url_title=${PUSHOVER_MESSAGE_URL_TITLE}" \
+        -F "priority=${PUSHOVER_MESSAGE_PRIORITY}" \
+        -F "timestamp=${PUSHOVER_MESSAGE_TIMESTAMP}" \
+        -F "sound=${PUSHOVER_NOTIFICATION_SOUND}" \
         https://api.pushover.net/1/messages.json
 }
 
 while getopts hvu:a:m:d:q:w:e:p:t:s: OPT; do
-    case "$OPT" in
-        h)
+    case "${OPT}" in
+        h|\?)
             print_version
             print_usage
             exit 0
@@ -74,37 +81,36 @@ while getopts hvu:a:m:d:q:w:e:p:t:s: OPT; do
             exit 0
             ;;
         u)
-            PUSHOVER_USER_TOKEN="$OPTARG"
+            PUSHOVER_USER_TOKEN="${OPTARG}"
             ;;
         a)
-            PUSHOVER_API_TOKEN="$OPTARG"
+            PUSHOVER_API_TOKEN="${OPTARG}"
             ;;
         m)
-            PUSHOVER_MESSAGE_TEXT="$OPTARG"
+            PUSHOVER_MESSAGE_TEXT="${OPTARG}"
             ;;
         d)
-            PUSHOVER_TARGET_DEVICE="$OPTARG"
+            PUSHOVER_TARGET_DEVICE="${OPTARG}"
             ;;
         q)
-            PUSHOVER_MESSAGE_TITLE="$OPTARG"
+            PUSHOVER_MESSAGE_TITLE="${OPTARG}"
             ;;
         w)
-            PUSHOVER_MESSAGE_URL="$OPTARG"
+            PUSHOVER_MESSAGE_URL="${OPTARG}"
             ;;
         e)
-            PUSHOVER_MESSAGE_URL_TITLE="$OPTARG"
+            PUSHOVER_MESSAGE_URL_TITLE="${OPTARG}"
             ;;
         p)
-            PUSHOVER_MESSAGE_PRIORITY="$OPTARG"
+            PUSHOVER_MESSAGE_PRIORITY="${OPTARG}"
             ;;
         t)
-            PUSHOVER_MESSAGE_TIMESTAMP="$OPTARG"
+            PUSHOVER_MESSAGE_TIMESTAMP="${OPTARG}"
             ;;
         s)
-            PUSHOVER_NOTIFICATION_SOUND="$OPTARG"
+            PUSHOVER_NOTIFICATION_SOUND="${OPTARG}"
             ;;
-        \?)
-            # getopts issues an error message
+        *)
             print_version >&2
             print_usage >&2
             exit 1
@@ -112,14 +118,14 @@ while getopts hvu:a:m:d:q:w:e:p:t:s: OPT; do
     esac
 done
 
-shift "$(expr $OPTIND - 1)"
+shift "$(expr ${OPTIND} - 1)"
 
-if [ "$PUSHOVER_MESSAGE_TEXT" = "" ]
+if [ -z "${PUSHOVER_MESSAGE_TEXT}" ]
 then
     PUSHOVER_MESSAGE_TEXT="$*"
 fi
 
-if [ "$PUSHOVER_USER_TOKEN" = "" ] || [ "$PUSHOVER_API_TOKEN" = "" ] || [ "$PUSHOVER_MESSAGE_TEXT" = "" ]
+if [ -z "${PUSHOVER_USER_TOKEN}" -o -z "${PUSHOVER_API_TOKEN}" -o -z "${PUSHOVER_MESSAGE_TEXT}" ]
 then
     print_version >&2
     print_usage >&2
@@ -127,10 +133,10 @@ then
 fi
 
 RETVAL="$(push_message)"
-if (echo "$RETVAL" | grep "error" > /dev/null)
+if echo "${RETVAL}" | grep -i -q "error"
 then
-    ERROR="$(echo $RETVAL | sed 's/.*errors\":\[\(".*"\)\].*/\1/')"
-    echo "error: $ERROR" >&2
+    ERROR="$(echo ${RETVAL} | sed 's/.*errors\":\[\(".*"\)\].*/\1/')"
+    echo "error: ${ERROR}" >&2
     exit 1
 fi
 
